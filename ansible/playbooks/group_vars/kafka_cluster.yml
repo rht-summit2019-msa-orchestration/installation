@@ -1,0 +1,24 @@
+---
+
+cluster_provisioner: developer
+
+operator_project: kafka-operator
+
+project_kafka_cluster: kafka-cluster
+
+strimzi_cluster_operator: strimzi-cluster-operator
+
+resources_dir: "{{ ocp_dir }}/strimzi"
+
+uninstall_delete_project: true
+uninstall_cluster_resources: false
+
+kafka_cluster: kafka-cluster
+
+kafka_topics: >
+  [{"name": "topic-driver-command", "partitions": "15", "replicas": "2", "config": "{}"},
+   {"name": "topic-driver-event", "partitions": "15", "replicas": "2", "config": "{}"},
+   {"name": "topic-passenger-command", "partitions": "15", "replicas": "2", "config": "{}"},
+   {"name": "topic-passenger-event", "partitions": "15", "replicas": "2", "config": "{}"},
+   {"name": "topic-ride-event", "partitions": "15", "replicas": "2", "config": "{}"},
+  ]

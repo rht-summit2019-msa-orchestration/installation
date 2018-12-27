@@ -1,0 +1,9 @@
+---
+
+# get current logged-in user
+- name: current logged in user
+  shell: "{{ openshift_cli }} whoami"
+  register: user
+
+- set_fact:
+    ocp_project: "{{ project_kafka_cluster }}-{{ user.stdout }}"

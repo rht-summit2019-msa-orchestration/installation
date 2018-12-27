@@ -1,0 +1,10 @@
+---
+
+- name: create work directory
+  tempfile:
+    state: directory
+    prefix: "{{ playbook_name }}-"
+  register: tempdir
+
+- set_fact:
+    work_dir: "{{ tempdir.path }}"

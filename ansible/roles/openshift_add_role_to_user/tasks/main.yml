@@ -1,0 +1,11 @@
+---
+
+- name: give {{ role_binding_role }} permissions to {{ role_binding_user }} in project {{ role_binding_project }}
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    resource_kind: role
+    user: "{{ role_binding_user }}"
+    namespace: "{{ role_binding_project }}"
+    rolebinding_name: "{{ rolebinding_name }}"
+    resource_name: "{{ role_binding_role }}"
