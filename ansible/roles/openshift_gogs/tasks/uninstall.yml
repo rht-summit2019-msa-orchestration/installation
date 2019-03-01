@@ -1,0 +1,81 @@
+---
+
+- name: remove gogs route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}"
+    kind: route
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs dc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}"
+    kind: dc
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs database service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}-postgresql"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs database dc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}-postgresql"
+    kind: dc
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs is
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}"
+    kind: is
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs pvc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: gogs-data
+    kind: pvc
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs postgres pvc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: gogs-postgres-data
+    kind: pvc
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs configmap
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: gogs-config
+    kind: configmap
+    namespace: "{{ ocp_project }}"
+
+- name: remove gogs serviceaccount
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ gogs_application }}"
+    kind: serviceaccount
+    namespace: "{{ ocp_project }}"

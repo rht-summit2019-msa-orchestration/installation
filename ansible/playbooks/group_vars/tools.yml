@@ -1,0 +1,14 @@
+---
+
+project_tools: ride-msa-tools
+
+# Gogs
+gogs_application: gogs
+gogs_admin_user: gogsadmin
+gogs_admin_password: admin123
+gogs_admin_email: admin@gogs.com
+gogs_organization: acme
+gogs_developer_user: developer
+gogs_developer_password: developer123
+gogs_developer_email: developer@gogs.com
+gogs_service_url: "{{ gogs_application }}.{{ project_tools }}.svc:3000"

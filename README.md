@@ -6,6 +6,7 @@ OCP version: 3.11
 
 _Components:_
 * Strimzi Kafka cluster
+* Gogs
 
 The repository contains the following folders:
 * `ansible`: ansible playbooks and roles
@@ -15,3 +16,4 @@ Ansible playbook installation order:
 * strimzi_operator.yml (requires cluster admin rights)
 * kafka_cluster.yml
 * kafka_topics.yml
+* gogs.yml

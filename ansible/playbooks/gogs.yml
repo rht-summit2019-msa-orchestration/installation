@@ -1,0 +1,28 @@
+---
+
+- name: Deploy Gogs git server
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/tools.yml
+
+  tasks:
+    - set_fact:
+        playbook_name: gogs
+        ocp_project: "{{ project_tools }}"
+        resources_dir: "{{ ocp_dir }}/gogs"
+    - include_role:
+        name: openshift_gogs
+      when: >
+        ACTION is not defined or
+        ACTION is none or
+        ACTION|trim() == "" or
+        ACTION|trim() == "create"
+    - include_role:
+        name: openshift_gogs
+        tasks_from: uninstall
+      when: >
+        ACTION is defined and
+        ACTION|trim() == "uninstall"

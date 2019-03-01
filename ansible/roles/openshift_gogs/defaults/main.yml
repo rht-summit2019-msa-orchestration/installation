@@ -1,0 +1,16 @@
+---
+
+gogs_template: gogs-persistent-template.yaml
+
+gogs_version: 0.11.34
+gogs_database_user: gogs
+gogs_database_password: gogs
+gogs_database_name: gogs
+gogs_database_max_connections: "100"
+gogs_database_shared_buffers: "12MB"
+gogs_database_admin_password: admin
+gogs_data_volume_capacity: 1Gi
+gogs_database_volume_capacity: 1Gi
+gogs_skip_tls_verify: true
+
+create_gogs_users: true
