@@ -8,6 +8,7 @@ _Components:_
 * Strimzi Kafka cluster
 * Gogs
 * PgAdmin4
+* Jenkins
 
 The repository contains the following folders:
 * `ansible`: ansible playbooks and roles
@@ -19,3 +20,4 @@ Ansible playbook installation order:
 * kafka_topics.yml
 * gogs.yml
 * pgadmin4.yml
+* jenkins.yml

@@ -1,0 +1,39 @@
+---
+
+- import_role:
+    name: openshift_apply_resource
+  vars:
+    resource_type: configmap
+    resource: "{{ jenkins_maven_slave_configmap }}"
+    resource_template: "{{ resources_dir }}/{{ jenkins_maven_slave_configmap_template }}"
+    namespace: "{{ ocp_project }}"
+
+- import_role:
+    name: openshift_apply_resource
+  vars:
+    resource_type: pvc
+    resource: "{{ jenkins_maven_slave_pvc }}"
+    resource_template: "{{ resources_dir }}/{{ jenkins_maven_slave_pvc_template }}"
+    namespace: "{{ ocp_project }}"
+
+- name: check if jenkins is deployed
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jenkins_service }}"
+    namespace: "{{ ocp_project }}"
+    kind: dc
+  register: deployed
+
+- name: deploy jenkins
+  shell: |
+    {{ openshift_cli }} process -f {{ resources_dir }}/{{ jenkins_template }} \
+    -p JENKINS_SERVICE_NAME={{ jenkins_service }} \
+    -p JNLP_SERVICE_NAME={{ jenkins_jnlp_service }} \
+    -p MEMORY_LIMIT={{ jenkins_memory_limit }} \
+    -p CPU_LIMIT={{ jenkins_cpu_limit }} \
+    -p NAMESPACE={{ jenkins_imagestream_namespace }} \
+    -p JENKINS_IMAGE_STREAM_TAG={{ jenkins_imagestream_tag }} \
+    -p DISABLE_ADMINISTRATIVE_MONITORS=true \
+    | {{ openshift_cli }} create -f - -n {{ ocp_project }}
+  when: deployed.results.stderr is defined and deployed.results.stderr != ""
