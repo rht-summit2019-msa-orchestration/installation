@@ -7,6 +7,7 @@ OCP version: 3.11
 _Components:_
 * Strimzi Kafka cluster
 * Gogs
+* PgAdmin4
 
 The repository contains the following folders:
 * `ansible`: ansible playbooks and roles
@@ -17,3 +18,4 @@ Ansible playbook installation order:
 * kafka_cluster.yml
 * kafka_topics.yml
 * gogs.yml
+* pgadmin4.yml

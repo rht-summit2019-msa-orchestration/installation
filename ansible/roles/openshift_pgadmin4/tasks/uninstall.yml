@@ -1,0 +1,40 @@
+---
+
+- name: remove pgadmin4 deployment
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_deployment }}"
+    kind: deployment
+    namespace: "{{ ocp_project }}"
+
+- name: remove pgadmin4 route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_route }}"
+    kind: route
+    namespace: "{{ ocp_project }}"
+
+- name: remove pgadmin4 service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_service }}"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove pgadmin4 pvc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_pvc }}"
+    kind: pvc
+    namespace: "{{ ocp_project }}"
+
+- name: remove pgadmin4 secret
+  oc_secret:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_secret }}"
+    namespace: "{{ ocp_project }}"

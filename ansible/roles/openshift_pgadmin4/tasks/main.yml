@@ -1,0 +1,20 @@
+---
+
+- name: create pgadmin4 secret
+  oc_secret:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ pgadmin4_secret }}"
+    namespace: "{{ ocp_project }}"
+    type: generic
+    from_literal:
+      pgadmin4.username: "{{ pgadmin4_username }}"
+      pgadmin4.password: "{{ pgadmin4_password }}"
+
+- import_role:
+    name: openshift_apply_resource
+  vars:
+    resource_type: deployment
+    resource: "{{ pgadmin4_deployment }}"
+    resource_template: "{{ resources_dir }}/deployment.yaml"
+    namespace: "{{ ocp_project }}"
