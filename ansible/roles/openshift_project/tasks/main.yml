@@ -32,3 +32,19 @@
     project_annotations is defined and
     project_annotations is not none and
     project_annotations|trim() != ""
+
+- oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    rolebinding_name: "{{ ocp_service_account }}-{{ ocp_privileges }}"
+    namespace: "{{ ocp_project }}"
+    resource_kind: role
+    user: "system:serviceaccount:{{ ocp_project }}:{{ ocp_service_account }}"
+    resource_name: "{{ ocp_privileges }}"
+  when: >
+    ocp_service_account is defined and
+    ocp_service_account is not none and
+    ocp_service_account|trim() != "" and
+    ocp_privileges is defined and
+    ocp_privileges is not none and
+    ocp_privileges|trim() != ""

@@ -9,6 +9,7 @@ _Components:_
 * Gogs
 * PgAdmin4
 * Jenkins
+* Application Services
 
 The repository contains the following folders:
 * `ansible`: ansible playbooks and roles
@@ -21,3 +22,4 @@ Ansible playbook installation order:
 * gogs.yml
 * pgadmin4.yml
 * jenkins.yml
+* driver_service.yml

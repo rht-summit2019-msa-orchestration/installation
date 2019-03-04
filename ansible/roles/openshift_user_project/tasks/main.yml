@@ -7,3 +7,11 @@
 
 - set_fact:
     ocp_project: "{{ ocp_project }}-{{ user.stdout }}"
+
+- set_fact:
+    project_tools: "{{ project_tools }}-{{ user.stdout }}"
+  when: project_tools is defined
+
+- set_fact:
+    project_kafka_cluster: "{{ project_kafka_cluster }}-{{ user.stdout }}"
+  when: project_kafka_cluster is defined

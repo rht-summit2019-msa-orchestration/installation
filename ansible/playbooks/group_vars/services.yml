@@ -1,0 +1,5 @@
+---
+
+project_services: ride-msa-services
+ocp_service_account: default
+ocp_privileges: view

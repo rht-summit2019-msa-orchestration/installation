@@ -1,0 +1,36 @@
+---
+
+application_configmap: driver-service
+logging_configmap: driver-service-logging
+
+http_port: 8080
+
+kafka_bootstrap_service: "{{ kafka_cluster }}-kafka-bootstrap.{{ project_kafka_cluster }}.svc"
+kafka_bootstrap_port: 9092
+kafka_bootstrap_servers: "{{ kafka_bootstrap_service}}:{{ kafka_bootstrap_port}}"
+kafka_groupid: driver-service
+
+kafka_topic_driver_command: topic-driver-command
+kafka_topic_driver_event: topic-driver-event
+kafka_topic_ride_event: topic-ride-event
+
+driver_assigned_min_delay: 1
+driver_assigned_max_delay: 3
+ride_started_min_delay: 5
+ride_started_max_delay: 10
+ride_ended_min_delay: 5
+ride_ended_max_delay: 10
+
+ocp_application_template: "{{ resources_dir }}/driver-service-template.yaml"
+ocp_binary_build_config_template: "{{ resources_dir }}/driver-service-binary.yaml"
+ocp_pipeline_build_config_template: "{{ resources_dir }}/driver-service-pipeline.yaml"
+ocp_application_name: driver-service
+ocp_deployment_config: driver-service
+ocp_binary_build_config: "{{ ocp_application_name }}-binary"
+ocp_pipeline_build_config: "{{ ocp_application_name }}-pipeline"
+ocp_build_imagestream: redhat-openjdk18-openshift:1.4
+
+git_url: "gogs:3000"
+git_repository: "acme/driver-service"
+
+logging_style: dev

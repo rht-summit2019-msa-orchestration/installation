@@ -1,0 +1,18 @@
+kafka.bootstrap.servers: {{ kafka_bootstrap_servers }}
+kafka.groupid: {{ kafka_groupid }}
+
+kafka.topic.driver-command: {{ kafka_topic_driver_command }}
+kafka.topic.driver-event: {{ kafka_topic_driver_event }}
+kafka.topic.ride-event: {{ kafka_topic_ride_event }}
+
+http.port: {{ http_port }}
+
+# delay before sending a `DriverAssignedEvent` message
+driver.assigned.min.delay: {{ driver_assigned_min_delay }}
+driver.assigned.max.delay: {{ driver_assigned_max_delay }}
+# delay before sending a `RideStartedEvent` message
+ride.started.min.delay: {{ ride_started_min_delay }}
+ride.started.max.delay: {{ ride_started_max_delay }}
+# delay before sending a `RideEndedEvent` message
+ride.ended.min.delay: {{ ride_ended_min_delay }}
+ride.ended.max.delay: {{ ride_ended_max_delay }}

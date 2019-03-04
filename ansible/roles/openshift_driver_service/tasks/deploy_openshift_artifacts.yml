@@ -1,0 +1,69 @@
+---
+
+- name: give edit permissions to system:serviceaccount:{{ project_tools }}:jenkins in project {{ ocp_project }}
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    rolebinding_name: jenkins-edit
+    namespace: "{{ ocp_project }}"
+    resource_kind: role
+    user: "system:serviceaccount:{{ project_tools }}:jenkins"
+    resource_name: edit
+
+- name: check if driver service deployment config exists
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_deployment_config }}"
+    namespace: "{{ ocp_project }}"
+    kind: dc
+  register: result
+
+- name: deploy driver service service, route, dc
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_application_template }} \ 
+    -p APPLICATION_NAME={{ ocp_application_name }} \
+    -p APPLICATION_CONFIGMAP={{ application_configmap }} \
+    | oc create -f - -n {{ ocp_project }}
+  when: >
+    result.results.stderr is defined and result.results.stderr != ""
+
+- name: check if {{ ocp_binary_build_config }} binary build config exists
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_binary_build_config }}"
+    namespace: "{{ project_tools }}"
+    kind: bc
+  register: result
+
+- name: create {{ ocp_binary_build_config }} buildconfig in the {{ project_tools }} project
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_binary_build_config_template }} \
+    -p APPLICATION_NAME={{ ocp_application_name }} \
+    -p IMAGE_STREAM={{ ocp_build_imagestream }} \
+    | oc create -f - -n {{ project_tools }}
+  when: result.results.stderr is defined and result.results.stderr != ""
+
+- name: check if the {{ ocp_pipeline_build_config }} pipeline exists in the {{ project_tools }} project
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_pipeline_build_config }}"
+    namespace: "{{ project_tools }}"
+    kind: bc
+  register: result
+
+- name: create the {{ ocp_pipeline_build_config }} pipeline in the {{ project_tools }} project
+  shell: |
+    {{ openshift_cli }} process -f {{ ocp_pipeline_build_config_template }} \
+    -p BC_NAME={{ ocp_pipeline_build_config }} \
+    -p GIT_URL=http://{{ git_url }} \
+    -p GIT_REPO={{ git_repository }}.git \
+    -p APP_BUILD={{ ocp_binary_build_config }} \
+    -p APP_PROJECT={{ ocp_project }} \
+    -p JENKINS_PROJECT={{ project_tools }} \
+    -p APP_IMAGESTREAM={{ ocp_application_name }} \    
+    -p APP_DC={{ ocp_application_name }} \
+    | oc create -f - -n {{ project_tools }}
+  when: result.results.stderr is defined and result.results.stderr != ""
