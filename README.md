@@ -23,3 +23,4 @@ Ansible playbook installation order:
 * pgadmin4.yml
 * jenkins.yml
 * driver_service.yml
+* passenger_service.yml

@@ -1,0 +1,36 @@
+---
+
+application_configmap: passenger-service
+logging_configmap: passenger-service-logging
+
+kafka_bootstrap_service: "{{ kafka_cluster }}-kafka-bootstrap.{{ project_kafka_cluster }}.svc"
+kafka_bootstrap_port: 9092
+kafka_bootstrap_address: "{{ kafka_bootstrap_service }}:{{ kafka_bootstrap_port }}"
+kafka_groupid: passenger-service
+kafka_consumer_concurrency: 5
+
+sender_destination_ride_requested: topic-ride-event
+sender_destination_passenger_canceled: topic-passenger-event
+
+listener_destination_driver_assigned: topic-driver-event
+listener_subscription_driver_assigned: passenger-service
+
+# thread pool size of the scheduler sending messages
+scheduler_pool_size: 5
+# min and max delay in seconds before sending a passenger cancelled event
+scheduler_delay_min: 1
+scheduler_delay_max: 3
+
+ocp_application_template: "{{ resources_dir }}/passenger-service-template.yaml"
+ocp_binary_build_config_template: "{{ resources_dir }}/passenger-service-binary.yaml"
+ocp_pipeline_build_config_template: "{{ resources_dir }}/passenger-service-pipeline.yaml"
+ocp_application_name: passenger-service
+ocp_deployment_config: passenger-service
+ocp_binary_build_config: "{{ ocp_application_name }}-binary"
+ocp_pipeline_build_config: "{{ ocp_application_name }}-pipeline"
+ocp_build_imagestream: redhat-openjdk18-openshift:1.4
+
+git_repository: "acme/passenger-service"
+git_url: "gogs:3000"
+
+logging_style: dev

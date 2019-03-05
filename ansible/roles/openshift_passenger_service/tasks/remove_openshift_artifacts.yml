@@ -1,0 +1,57 @@
+---
+
+- name: remove {{ ocp_application_name }} route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_application_name }}"
+    namespace: "{{ ocp_project }}"
+    kind: route
+
+- name: remove {{ ocp_application_name }} service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_application_name }}"
+    namespace: "{{ ocp_project }}"
+    kind: service
+
+- name: remove {{ ocp_deployment_config }} dc
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_deployment_config }}"
+    namespace: "{{ ocp_project }}"
+    kind: dc
+
+- name: remove the {{ ocp_binary_build_config }} buildconfig
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_binary_build_config }}"
+    namespace: "{{ project_tools }}"
+    kind: bc
+
+- name: remove the {{ ocp_pipeline_build_config }} pipeline
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_pipeline_build_config }}"
+    namespace: "{{ project_tools }}"
+    kind: bc
+
+- name: remove the {{ ocp_application_name }} imagestream in the {{ project_tools }} project
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_application_name }}"
+    namespace: "{{ project_tools }}"
+    kind: is
+
+- name: remove the {{ ocp_application_name }} imagestream in the {{ ocp_project }} project
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ ocp_application_name }}"
+    namespace: "{{ ocp_project }}"
+    kind: is

@@ -1,0 +1,43 @@
+---
+
+# application configmap
+- name: copy {{ application_configmap }} configmap template
+  template: 
+    src: application.properties 
+    dest: "{{ work_dir }}/application.properties"
+
+- name: create {{ application_configmap }} configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: present
+    namespace: "{{ ocp_project }}"
+    name: "{{ application_configmap }}"
+    from_file:
+      application.properties: "{{ work_dir }}/application.properties" 
+
+# logging configmap
+- name: set logging template fact
+  set_fact:
+    logging_configmap_template: logback.xml
+
+- name: set logging template fact
+  set_fact:
+    logging_configmap_template: logback-dev.xml
+  when: >
+    logging_style is defined and logging_style == "dev"
+
+- name: copy {{ logging_configmap }} configmap template
+  template: 
+    src: "{{ logging_configmap_template }}" 
+    dest: "{{ work_dir }}/logback.xml"
+
+- name: create {{ logging_configmap }} configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: present
+    namespace: "{{ ocp_project }}"
+    name: "{{ logging_configmap }}"
+    from_file:
+      logback.xml: "{{ work_dir }}/logback.xml"
+
+- include_tasks: deploy_openshift_artifacts.yml

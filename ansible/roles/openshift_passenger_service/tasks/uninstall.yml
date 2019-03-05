@@ -1,0 +1,17 @@
+---
+
+- include_tasks: remove_openshift_artifacts.yml
+
+- name: remove logging configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: absent
+    namespace: "{{ ocp_project }}"
+    name: "{{ logging_configmap }}"
+
+- name: remove application configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: absent
+    namespace: "{{ ocp_project }}"
+    name: "{{ application_configmap }}"
