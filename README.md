@@ -24,3 +24,23 @@ Ansible playbook installation order:
 * jenkins.yml
 * driver_service.yml
 * passenger_service.yml
+* dispatch_service.yml
+
+Provisioning for user 'user1':
+* Log into OpenShift cluster with admin user
+* Install Strimzi operator
+```
+$ ansible-playbook playbooks/strimzi_operator.yml -e cluster_provisioner=user1
+``` 
+* Log into OpenShift cluster as user1
+* Run Ansible playbooks:
+```
+$ ansible-playbook playbooks/kafka_cluster.yml
+$ ansible-playbook playbooks/kafka_topics.yml
+$ ansible-playbook playbooks/gogs.yml
+$ ansible-playbook playbooks/pgadmin4.yml
+$ ansible-playbook playbooks/jenkins.yml
+$ ansible-playbook playbooks/driver_service.yml
+$ ansible-playbook playbooks/passenger_service.yml
+$ ansible-playbook playbooks/dispatch_service.yml
+```

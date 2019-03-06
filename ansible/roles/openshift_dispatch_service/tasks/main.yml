@@ -1,0 +1,58 @@
+---
+
+# deploy postgresql
+- name: check if postgresql is deployed
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ postgresql_service_name }}"
+    namespace: "{{ ocp_project }}"
+    kind: dc
+  register: result
+
+- import_tasks: deploy_postgresql.yml
+  when: result.results.stderr is defined and result.results.stderr != ""
+
+# application configmap
+- name: copy configmap files from template
+  template: src={{item}} dest={{ work_dir }}/{{ item }}
+  with_items:
+    - application.properties
+    - jbpm-quartz.properties
+
+- name: create {{ application_configmap }} configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: present
+    namespace: "{{ ocp_project }}"
+    name: "{{ application_configmap }}"
+    from_file:
+      application.properties: "{{ work_dir }}/application.properties"
+      jbpm-quartz.properties: "{{ work_dir }}/jbpm-quartz.properties"
+
+# logging configmap
+- name: set logging template fact
+  set_fact:
+    logging_configmap_template: logback.xml
+
+- name: set logging template fact
+  set_fact:
+    logging_configmap_template: logback-dev.xml
+  when: >
+    logging_style is defined and logging_style == "dev"
+
+- name: copy {{ logging_configmap }} configmap template
+  template: 
+    src: "{{ logging_configmap_template }}" 
+    dest: "{{ work_dir }}/logback.xml"
+
+- name: create {{ logging_configmap }} configmap
+  oc_configmap:
+    oc_binary: "{{ openshift_cli }}"
+    state: present
+    namespace: "{{ ocp_project }}"
+    name: "{{ logging_configmap }}"
+    from_file:
+      logback.xml: "{{ work_dir }}/logback.xml"
+
+- include_tasks: deploy_openshift_artifacts.yml
