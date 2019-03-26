@@ -21,7 +21,7 @@ scheduler_pool_size: 5
 scheduler_delay_min: 1
 scheduler_delay_max: 3
 
-ocp_application_template: "{{ resources_dir }}/passenger-service-template.yaml"
+ocp_application_template: "{{ resources_dir }}/passenger-service-tracing-template.yaml"
 ocp_binary_build_config_template: "{{ resources_dir }}/passenger-service-binary.yaml"
 ocp_pipeline_build_config_template: "{{ resources_dir }}/passenger-service-pipeline.yaml"
 ocp_application_name: passenger-service
@@ -34,3 +34,10 @@ git_repository: "acme/passenger-service"
 git_url: "gogs:3000"
 
 logging_style: dev
+
+tracing_service_name: passenger-service
+tracing_reporter_log_spans: false
+tracing_sampler_type: ratelimiting
+tracing_sampler_param: 1
+tracing_agent_host: localhost
+tracing_agent_port: 6831

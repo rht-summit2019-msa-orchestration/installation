@@ -16,3 +16,14 @@ ride.started.max.delay: {{ ride_started_max_delay }}
 # delay before sending a `RideEndedEvent` message
 ride.ended.min.delay: {{ ride_ended_min_delay }}
 ride.ended.max.delay: {{ ride_ended_max_delay }}
+
+# tracing
+service-name: {{ tracing_service_name }}
+reporter-log-spans: {{ tracing_reporter_log_spans }}
+sampler-type: {{ tracing_sampler_type }}
+sampler-param: {{ tracing_sampler_param }}
+# const
+# sampler-type: const
+# sampler-param: 1
+agent-host: {{ tracing_agent_host }}
+agent-port: {{ tracing_agent_port }}

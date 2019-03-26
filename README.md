@@ -22,6 +22,7 @@ Ansible playbook installation order:
 * gogs.yml
 * pgadmin4.yml
 * jenkins.yml
+* jaeger.yml
 * driver_service.yml
 * passenger_service.yml
 * dispatch_service.yml
@@ -40,6 +41,7 @@ $ ansible-playbook playbooks/kafka_topics.yml
 $ ansible-playbook playbooks/gogs.yml
 $ ansible-playbook playbooks/pgadmin4.yml
 $ ansible-playbook playbooks/jenkins.yml
+$ ansible-playbook playbooks/jaeger.yml
 $ ansible-playbook playbooks/driver_service.yml
 $ ansible-playbook playbooks/passenger_service.yml
 $ ansible-playbook playbooks/dispatch_service.yml

@@ -1,0 +1,49 @@
+---
+
+- name: remove jaeger-query route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jaeger_service_name }}-query"
+    kind: route
+    namespace: "{{ ocp_project }}"
+
+- name: remove jaeger-query service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jaeger_service_name }}-query"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove jaeger-collector service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jaeger_service_name }}-collector"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove jaeger-agent service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jaeger_service_name }}-agent"
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove jaeger-zipkin service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: zipkin
+    kind: service
+    namespace: "{{ ocp_project }}"
+
+- name: remove jaeger deployment
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ jaeger_service_name }}"
+    kind: deployment
+    namespace: "{{ ocp_project }}"

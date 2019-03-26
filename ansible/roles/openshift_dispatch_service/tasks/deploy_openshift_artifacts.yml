@@ -24,6 +24,7 @@
     {{ openshift_cli }} process -f {{ ocp_application_template }} \ 
     -p APPLICATION_NAME={{ ocp_application_name }} \
     -p APPLICATION_CONFIGMAP={{ application_configmap }} \
+    -p JAEGER_COLLECTOR_NAMESPACE={{ project_tools }} \
     | oc create -f - -n {{ ocp_project }}
   when: >
     result.results.stderr is defined and result.results.stderr != ""

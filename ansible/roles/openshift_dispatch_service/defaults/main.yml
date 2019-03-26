@@ -40,7 +40,7 @@ quartz_configuration: "/app/config/jbpm-quartz.properties"
 quartz_datasource_dbcp_max_total: 20
 quartz_clustered: true
 
-ocp_application_template: "{{ resources_dir }}/dispatch-service-template.yaml"
+ocp_application_template: "{{ resources_dir }}/dispatch-service-tracing-template.yaml"
 ocp_binary_build_config_template: "{{ resources_dir }}/dispatch-service-binary.yaml"
 ocp_pipeline_build_config_template: "{{ resources_dir }}/dispatch-service-pipeline.yaml"
 ocp_application_name: dispatch-service
@@ -53,3 +53,10 @@ git_url: "gogs:3000"
 git_repository: "acme/dispatch-service"
 
 logging_style: dev
+
+tracing_service_name: dispatch-service
+tracing_reporter_log_spans: false
+tracing_sampler_type: ratelimiting
+tracing_sampler_param: 1
+tracing_agent_host: localhost
+tracing_agent_port: 6831

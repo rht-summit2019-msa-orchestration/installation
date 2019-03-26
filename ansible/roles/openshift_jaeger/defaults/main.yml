@@ -1,0 +1,5 @@
+---
+
+jaeger_service_name: jaeger
+
+jaeger_template: "{{ resources_dir }}/jaeger-all-in-one.yaml"
