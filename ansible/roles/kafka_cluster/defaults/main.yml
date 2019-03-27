@@ -8,6 +8,8 @@ zookeeper_storage_type: persistent
 zookeeper_volume_capacity: 1Gi
 zookeeper_delete_claim: "true"
 
+kafka_version: 2.1.1
+kafka_log_message_format_version: "2.1"
 kafka_replicas: 3
 # persistent, ephemeral
 kafka_storage_type: persistent
