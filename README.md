@@ -9,6 +9,8 @@ _Components:_
 * Gogs
 * PgAdmin4
 * Jenkins
+* Jaeger
+* Prometheus and Grafana
 * Application Services
 
 The repository contains the following folders:
@@ -26,6 +28,9 @@ Ansible playbook installation order:
 * driver_service.yml
 * passenger_service.yml
 * dispatch_service.yml
+* prometheus.yml
+* prometheus_sql.yml
+* grafana.yml
 
 Provisioning for user 'user1':
 * Log into OpenShift cluster with admin user
@@ -45,4 +50,7 @@ $ ansible-playbook playbooks/jaeger.yml
 $ ansible-playbook playbooks/driver_service.yml
 $ ansible-playbook playbooks/passenger_service.yml
 $ ansible-playbook playbooks/dispatch_service.yml
+$ ansible-playbook playbooks/prometheus.yml
+$ ansible-playbook playbooks/prometheus_sql.yml
+$ ansible-playbook playbooks/grafana.yml
 ```

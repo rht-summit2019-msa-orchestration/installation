@@ -1,0 +1,91 @@
+rule_files:
+  - '*.rules'
+
+# global config
+global:
+  scrape_interval:     30s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 30s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+scrape_configs:
+- job_name: 'kafka'
+  kubernetes_sd_configs:
+  - role: endpoints
+    namespaces:
+      names:
+      - {{ project_kafka_cluster }}
+
+  relabel_configs:
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+    action: replace
+    target_label: __metrics_path__
+    regex: (.+)
+  - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+    action: replace
+    target_label: __address__
+    regex: ([^:]+)(?::\d+)?;(\d+)
+    replacement: $1:$2
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: kubernetes_namespace
+  - source_labels: [__meta_kubernetes_service_name]
+    action: replace
+    target_label: kubernetes_name
+  - source_labels: [__meta_kubernetes_pod_name]
+    action: replace
+    target_label: pod_name
+
+- job_name: 'dispatch-service'
+  kubernetes_sd_configs:
+  - role: endpoints
+    namespaces:
+      names:
+      - {{ project_services }}
+
+  relabel_configs:
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+    action: replace
+    target_label: __metrics_path__
+    regex: (.+)
+  - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+    action: replace
+    target_label: __address__
+    regex: ([^:]+)(?::\d+)?;(\d+)
+    replacement: $1:$2
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: kubernetes_namespace
+  - source_labels: [__meta_kubernetes_service_name]
+    action: replace
+    target_label: kubernetes_name
+  - source_labels: [__meta_kubernetes_pod_name]
+    action: replace
+    target_label: pod_name
+
+- job_name: 'dispatch-service-pgsql'
+  kubernetes_sd_configs:
+  - role: service
+    namespaces:
+      names:
+      - {{ project_tools }}
+
+  relabel_configs:
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+    action: replace
+    target_label: __metrics_path__
+    regex: (.+)
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: kubernetes_namespace
+  - source_labels: [__meta_kubernetes_service_name]
+    action: replace
+    target_label: kubernetes_name
