@@ -1,0 +1,21 @@
+---
+
+grafana_service_account: grafana
+
+grafana_configmap: grafana-config
+
+grafana_deployment: grafana
+
+grafana_route: grafana
+
+grafana_template: "{{ resources_dir }}/grafana.yaml"
+
+grafana_image: "docker.io/grafana/grafana:6.0.2"
+
+grafana_prometheus_datasource: prometheus
+
+prometheus_route: prometheus
+
+prometheus_service: prometheus
+
+prometheus_service_port: 9090

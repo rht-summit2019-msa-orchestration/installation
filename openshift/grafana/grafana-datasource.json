@@ -1,0 +1,13 @@
+  {
+    "name": "{{ grafana_prometheus_datasource }}",
+    "type": "prometheus",
+    "typeLogoUrl": "",
+    "access": "proxy",
+    "url": "{{ prometheus_url }}",
+    "basicAuth": false,
+    "withCredentials": false,
+    "jsonData": {
+      "tlsSkipVerify": true,
+      "token": "{{ grafana_sa_token.stdout }}"
+    }
+  }
