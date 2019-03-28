@@ -61,6 +61,7 @@
     -p BC_NAME={{ ocp_pipeline_build_config }} \
     -p GIT_URL=http://{{ git_url }} \
     -p GIT_REPO={{ git_repository }}.git \
+    -p GIT_REPO_KJAR={{ git_repository_kjar }}.git \
     -p APP_BUILD={{ ocp_binary_build_config }} \
     -p APP_PROJECT={{ ocp_project }} \
     -p JENKINS_PROJECT={{ project_tools }} \

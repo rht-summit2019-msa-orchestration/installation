@@ -19,6 +19,7 @@ objects:
         jenkinsfile: |-
           def git_url = "${GIT_URL}"
           def git_repo_app = "${GIT_REPO}"
+          def git_repo_kjar = "${GIT_REPO_KJAR}"
           def version = ""
           def groupId = ""
           def artifactId = ""
@@ -29,6 +30,12 @@ objects:
           def app_name = "${APP_DC}"
 
           node ('maven-with-pvc') {
+
+            stage('Build and install kjar') {
+              git url: "${git_url}/${git_repo_kjar}", branch: "master"
+              sh "mvn clean install -Dcom.redhat.xpaas.repo.redhatga=true"
+            }
+
             stage ('Compile') {
               echo "Starting build"
               git url: "${git_url}/${git_repo_app}", branch: "master"
@@ -123,6 +130,9 @@ parameters:
   required: true
 - description: Application Git repository name
   name: GIT_REPO
+  required: true
+- description: Application Kjar Git repository name
+  name: GIT_REPO_KJAR
   required: true
 - description: buildconfig to trigger
   name: APP_BUILD
