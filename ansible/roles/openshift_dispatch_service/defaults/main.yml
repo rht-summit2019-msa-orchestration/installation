@@ -51,5 +51,6 @@ ocp_build_imagestream: redhat-openjdk18-openshift:1.4
 
 git_url: "gogs:3000"
 git_repository: "acme/dispatch-service"
+git_repository_kjar: "acme/dispatch-service-kjar"
 
 logging_style: dev
