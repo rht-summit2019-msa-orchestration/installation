@@ -1,0 +1,25 @@
+---
+
+- name: remove prometheussql service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: prometheussql
+    kind: service
+
+- name: remove prometheussql deployment
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: prometheussql
+    kind: deployment
+
+- name: remove {{ prometheus_sql_configmap }} configmap
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ prometheus_sql_configmap }}"
+    kind: configmap

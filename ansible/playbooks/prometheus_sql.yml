@@ -1,0 +1,29 @@
+---
+
+- name: Deploy Prometheus-sql
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  run_once: true
+  vars_files:
+    - group_vars/tools.yml
+    - group_vars/services.yml
+
+  tasks:
+    - set_fact:
+        playbook_name: prometheus-sql
+        ocp_project: "{{ project_tools }}"
+        resources_dir: "{{ ocp_dir }}/prometheus-sql"
+    - include_role:
+        name: openshift_prometheus_sql
+      when: >
+        ACTION is not defined or
+        ACTION is none or
+        ACTION|trim() == "" or
+        ACTION|trim() == "create"
+    - include_role:
+        name: openshift_prometheus_sql
+        tasks_from: uninstall
+      when: >
+        ACTION is defined and
+        ACTION|trim() == "uninstall"

@@ -1,0 +1,31 @@
+---
+
+# configmap
+- name: copy {{ prometheus_sql_configmap }} configmap files from template
+  template: src={{ resources_dir }}/{{ item }} dest={{ work_dir }}/{{ item }}
+  with_items:
+    - prometheus-sql.yml
+    - queries.yml
+
+- name: create {{ prometheus_sql_configmap }} configmap
+  oc_configmap:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ prometheus_sql_configmap }}"
+    from_file:
+      prometheus-sql.yml: "{{ work_dir }}/prometheus-sql.yml"
+      queries.yml: "{{ work_dir }}/queries.yml"
+
+- name: check if prometheussql is deployed
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: prometheussql
+    kind: deployment
+  register: deployed 
+
+- name: deploy prometheussql app
+  shell: "{{ openshift_cli }} create -f {{ prometheus_sql_template }} -n {{ ocp_project }}"
+  when: deployed.results.stderr is defined and deployed.results.stderr != ""

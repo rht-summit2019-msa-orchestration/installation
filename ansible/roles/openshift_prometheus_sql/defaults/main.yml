@@ -1,0 +1,16 @@
+---
+
+prometheus_sql_configmap: prometheus-sql-config
+
+prometheus_sql_template: "{{ resources_dir}}/prometheus-sql-template.yaml"
+
+query_interval: 10s
+query_timeout: 5s
+
+postgres_host: dispatch-service-postgresql.{{ project_services }}.svc 
+postgres_port: 5432
+
+#todo: get dynamically from postgresql secret
+postgres_user: rhpam
+postgres_password: rhpam
+postgres_database: rhpam
