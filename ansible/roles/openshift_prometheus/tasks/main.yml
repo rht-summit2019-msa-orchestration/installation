@@ -18,7 +18,7 @@
     rolebinding_name: prometheus-view
     resource_kind: role
 
-- name: add cluster view rights to prometheus service account in enmasse project
+- name: add cluster view rights to prometheus service account in kafka cluster project
   oc_adm_policy_user:
     state: present
     oc_binary: "{{ openshift_cli }}"
