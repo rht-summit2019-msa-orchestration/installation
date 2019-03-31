@@ -15,3 +15,7 @@
 - set_fact:
     project_kafka_cluster: "{{ project_kafka_cluster }}-{{ user.stdout }}"
   when: project_kafka_cluster is defined
+
+- set_fact:
+    project_services: "{{ project_services }}-{{ user.stdout }}"
+  when: project_services is defined
