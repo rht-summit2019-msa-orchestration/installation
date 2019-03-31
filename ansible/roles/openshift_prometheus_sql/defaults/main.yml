@@ -11,6 +11,6 @@ postgres_host: dispatch-service-postgresql.{{ project_services }}.svc
 postgres_port: 5432
 
 #todo: get dynamically from postgresql secret
-postgres_user: rhpam
-postgres_password: rhpam
+postgres_user: jboss
+postgres_password: jboss
 postgres_database: rhpam
