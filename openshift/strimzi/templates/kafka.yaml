@@ -16,6 +16,12 @@ spec:
       limits:
         cpu: '{{ kafka_limits_cpu }}'
         memory: '{{ kafka_limits_memory }}'
+    livenessProbe:
+      initialDelaySeconds: {{ kafka_liveness_probe_initial_delay_seconds }}
+      timeoutSeconds: {{ kafka_liveness_probe_timeout_seconds }}
+    readinessProbe:
+      initialDelaySeconds: {{ kafka_readiness_probe_initial_delay_seconds }}
+      timeoutSeconds: {{ kafka_readiness_probe_timeout_seconds }}
 {% if enable_metrics|bool == true %}
     metrics:
       # Inspired by config from Kafka 2.0.0 example rules:
@@ -129,6 +135,20 @@ spec:
 {% if kafka_storage_type == "ephemeral" %}
       type: ephemeral
 {% endif %}
+    tlsSidecar:
+      resources:
+        requests:
+          cpu: '{{ kafka_tlssidecar_requests_cpu }}'
+          memory: '{{ kafka_tlssidecar_requests_memory }}'
+        limits:
+          cpu: '{{ kafka_tlssidecar_limits_cpu }}'
+          memory: '{{ kafka_tlssidecar_limits_memory }}'
+      livenessProbe:
+        initialDelaySeconds: {{ kafka_tlssidecar_liveness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ kafka_tlssidecar_liveness_probe_timeout_seconds }}
+      readinessProbe:
+        initialDelaySeconds: {{ kafka_tlssidecar_readiness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ kafka_tlssidecar_readiness_probe_timeout_seconds }}
   zookeeper:
     replicas: {{ zookeeper_replicas }}
     resources:
@@ -138,6 +158,12 @@ spec:
       limits:
         cpu: '{{ zookeeper_limits_cpu }}'
         memory: '{{ zookeeper_limits_memory }}'
+    readinessProbe:
+      initialDelaySeconds: {{ zookeeper_readiness_probe_initial_delay_seconds }}
+      timeoutSeconds: {{ zookeeper_readiness_probe_timeout_seconds }}
+    livenessProbe:
+      initialDelaySeconds: {{ zookeeper_liveness_probe_initial_delay_seconds }}
+      timeoutSeconds: {{ zookeeper_liveness_probe_timeout_seconds }}
 {% if enable_metrics|bool == true %}
     metrics:
       # Inspired by Zookeeper rules
@@ -175,14 +201,61 @@ spec:
 {% endif %}
 {% if zookeeper_storage_type == "ephemeral" %}
       type: ephemeral
-{% endif %}    
+{% endif %}
+    tlsSidecar:
+      resources:
+        requests:
+          cpu: '{{ zookeeper_tlssidecar_requests_cpu }}'
+          memory: '{{ zookeeper_tlssidecar_requests_memory }}'
+        limits:
+          cpu: '{{ zookeeper_tlssidecar_limits_cpu }}'
+          memory: '{{ zookeeper_tlssidecar_limits_memory }}'
+      livenessProbe:
+        initialDelaySeconds: {{ zookeeper_tlssidecar_liveness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ zookeeper_tlssidecar_liveness_probe_timeout_seconds }}
+      readinessProbe:
+        initialDelaySeconds: {{ zookeeper_tlssidecar_readiness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ zookeeper_tlssidecar_readiness_probe_timeout_seconds }}
   entityOperator:
     topicOperator:
       resources:
-        request:
-          cpu: "{{ topic_operator_request_cpu }}"
-          memory: {{ topic_operator_request_memory }}
-        limit:
-          cpu: "{{ topic_operator_limit_cpu }}"
-          memory: {{ topic_operator_limit_memory }}
-    userOperator: {}
+        requests:
+          cpu: "{{ topic_operator_requests_cpu }}"
+          memory: {{ topic_operator_requests_memory }}
+        limits:
+          cpu: "{{ topic_operator_limits_cpu }}"
+          memory: {{ topic_operator_limits_memory }}
+      readinessProbe:
+        initialDelaySeconds: {{ topic_operator_readiness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ topic_operator_readiness_probe_timeout_seconds }}
+      livenessProbe:
+        initialDelaySeconds: {{ topic_operator_liveness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ topic_operator_liveness_probe_timeout_seconds }}
+    userOperator: 
+      resources:
+        requests:
+          cpu: "{{ user_operator_requests_cpu }}"
+          memory: {{ user_operator_requests_memory }}
+        limits:
+          cpu: "{{ user_operator_limits_cpu }}"
+          memory: {{ user_operator_limits_memory }}
+      readinessProbe:
+        initialDelaySeconds: {{ user_operator_readiness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ user_operator_readiness_probe_timeout_seconds }}
+      livenessProbe:
+        initialDelaySeconds: {{ user_operator_liveness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ user_operator_liveness_probe_timeout_seconds }}
+    tlsSidecar:
+      resources:
+        requests:
+          cpu: "{{ entity_operator_tlssidecar_requests_cpu }}"
+          memory: {{ entity_operator_tlssidecar_requests_memory }}
+        limits:
+          cpu: "{{ entity_operator_tlssidecar_limits_cpu }}"
+          memory: {{ entity_operator_tlssidecar_limits_memory }}
+      readinessProbe:
+        initialDelaySeconds: {{ entity_operator_tlssidecar_readiness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ entity_operator_tlssidecar_readiness_probe_timeout_seconds }}
+      livenessProbe:
+        initialDelaySeconds: {{ entity_operator_tlssidecar_liveness_probe_initial_delay_seconds }}
+        timeoutSeconds: {{ entity_operator_tlssidecar_liveness_probe_timeout_seconds }}
