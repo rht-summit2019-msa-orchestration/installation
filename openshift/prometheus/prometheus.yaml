@@ -73,7 +73,7 @@ scrape_configs:
   - role: service
     namespaces:
       names:
-      - {{ project_services }}
+      - {{ project_tools }}
 
   relabel_configs:
   - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_probe]

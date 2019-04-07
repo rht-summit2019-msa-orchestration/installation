@@ -1,0 +1,65 @@
+---
+
+- name: remove prometheus route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: route
+    name: prometheus
+    namespace: "{{ ocp_project }}"
+
+- name: remove prometheus service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: service
+    name: prometheus
+    namespace: "{{ ocp_project }}"
+
+- name: remove prometheus deployment
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: deployment
+    name: prometheus
+    namespace: "{{ ocp_project }}"
+
+- name: remove cluster view rights from prometheus service account
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: rolebinding
+    name: prometheus-view
+    namespace: "{{ ocp_project }}"
+
+- name: remove cluster view rights from prometheus service account in project {{ project_kafka_cluster }}
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: rolebinding
+    name: prometheus-view
+    namespace: "{{ project_kafka_cluster }}"
+
+- name: remove cluster view rights from prometheus service account in project {{ project_services }}
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: rolebinding
+    name: prometheus-view
+    namespace: "{{ project_services }}"
+
+- name: remove prometheus service account
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: sa
+    name: "{{ prometheus_service_account }}"
+    namespace: "{{ ocp_project }}"
+
+- name: remove prometheus configmap
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: configmap
+    name: "{{ prometheus_configmap }}"
+    namespace: "{{ ocp_project }}"

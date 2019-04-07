@@ -1,0 +1,9 @@
+---
+
+prometheus_service_account: prometheus
+
+prometheus_configmap: prometheus
+
+prometheus_service: prometheus
+
+prometheus_template: "{{ resources_dir }}/prometheus-template.yaml"

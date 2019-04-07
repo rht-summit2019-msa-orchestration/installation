@@ -1,0 +1,70 @@
+---
+
+# service account
+- name: create service account {{ prometheus_service_account }} service account
+  oc_serviceaccount:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ prometheus_service_account }}"
+    namespace: "{{ ocp_project }}"
+
+- name: add cluster view rights to prometheus service account
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    user: "system:serviceaccount:{{ ocp_project }}:{{ prometheus_service_account }}"
+    resource_name: view
+    rolebinding_name: prometheus-view
+    resource_kind: role
+
+- name: add cluster view rights to prometheus service account in kafka cluster project
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ project_kafka_cluster }}"
+    user: "system:serviceaccount:{{ ocp_project }}:{{ prometheus_service_account }}"
+    resource_name: view
+    rolebinding_name: prometheus-view
+    resource_kind: role
+
+- name: add cluster view rights to prometheus service account in services project
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ project_services }}"
+    user: "system:serviceaccount:{{ ocp_project }}:{{ prometheus_service_account }}"
+    resource_name: view
+    rolebinding_name: prometheus-view
+    resource_kind: role
+
+# create prometheus configmap
+- name: copy {{ prometheus_configmap }} configmap from template
+  template: src={{ resources_dir }}/{{ item }} dest={{ work_dir }}/{{ item }}
+  with_items:
+    - "prometheus.yaml"
+    - "dispatch-service.rules"
+
+- name: create {{ prometheus_configmap }} configmap
+  oc_configmap:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ prometheus_configmap }}"
+    from_file:
+      prometheus.yaml: "{{ work_dir }}/prometheus.yaml"
+      dispatch-service.rules: "{{ work_dir }}/dispatch-service.rules"
+
+# deploy prometheus
+- name: check if prometheus is deployed
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ prometheus_service }}"
+    kind: deployment
+  register: deployed 
+
+- name: deploy prometheus
+  shell: "{{ openshift_cli }} create -f {{ prometheus_template }} -n {{ ocp_project }}"
+  when: deployed.results.stderr is defined and deployed.results.stderr != ""
