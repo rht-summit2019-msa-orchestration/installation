@@ -1,0 +1,21 @@
+groups:
+- name: kafka_messages_in_per_topic
+  rules:
+  - record: topic_ride_event:messages_in:rate1m
+    expr: sum(irate(kafka_server_brokertopicmetrics_messagesin_total{topic="topic-ride-event"}[1m]))
+  - record: topic_passenger_event:messages_in:rate1m
+    expr: sum(irate(kafka_server_brokertopicmetrics_messagesin_total{topic="topic-passenger-event"}[1m]))
+  - record: topic_driver_event:messages_in:rate1m
+    expr: sum(irate(kafka_server_brokertopicmetrics_messagesin_total{topic="topic-driver-event"}[1m]))
+  - record: topic_passenger_command:messages_in:rate1m
+    expr: sum(irate(kafka_server_brokertopicmetrics_messagesin_total{topic="topic-passenger-command"}[1m]))
+  - record: topic_driver_command:messages_in:rate1m
+    expr: sum(irate(kafka_server_brokertopicmetrics_messagesin_total{topic="topic-driver-command"}[1m]))
+- name: kafka_pods_total_memory_cpu
+  rules:
+  - record: kafka_pods_total_memory_used
+    expr: sum(jvm_memory_bytes_used{pod_name=~"kafka-cluster-kafka-[0-9]"}) by (pod_name)
+  - record: kafka_pods_total_memory_max
+    expr: sum(jvm_memory_bytes_max{pod_name=~"kafka-cluster-kafka-[0-9]"}) by (pod_name)
+  - record: kafka_pods_cpu_used
+    expr: sum(rate(process_cpu_seconds_total{pod_name=~"kafka-cluster-kafka-[0-9]"}[5m])) by (pod_name)

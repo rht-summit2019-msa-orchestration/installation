@@ -44,6 +44,7 @@
   with_items:
     - "prometheus.yaml"
     - "dispatch-service.rules"
+    - "kafka.rules"
 
 - name: create {{ prometheus_configmap }} configmap
   oc_configmap:
@@ -54,6 +55,7 @@
     from_file:
       prometheus.yaml: "{{ work_dir }}/prometheus.yaml"
       dispatch-service.rules: "{{ work_dir }}/dispatch-service.rules"
+      kafka.rules: "{{ work_dir }}/kafka.rules"
 
 # deploy prometheus
 - name: check if prometheus is deployed
