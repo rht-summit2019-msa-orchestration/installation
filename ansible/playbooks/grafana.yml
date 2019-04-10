@@ -9,7 +9,6 @@
     - group_vars/tools.yml
 
   tasks:
-  tasks:
     - set_fact:
         playbook_name: grafana
         ocp_project: "{{ project_tools }}"
