@@ -1,0 +1,49 @@
+---
+
+- name: remove grafana route
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: route
+    name: grafana
+    namespace: "{{ ocp_project }}"
+
+- name: remove grafana service
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: service
+    name: grafana
+    namespace: "{{ ocp_project }}"
+
+- name: remove grafana deployment
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: deployment
+    name: grafana
+    namespace: "{{ ocp_project }}"
+
+- name: remove cluster view rights from prometheus service account in project {{ project_services }}
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: rolebinding
+    name: grafana-view
+    namespace: "{{ ocp_project }}"
+
+- name: remove grafana service account
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: sa
+    name: "{{ grafana_service_account }}"
+    namespace: "{{ ocp_project }}"
+
+- name: remove grafana configmap
+  oc_obj:
+    state: absent
+    oc_binary: "{{ openshift_cli }}"
+    kind: configmap
+    name: "{{ grafana_configmap }}"
+    namespace: "{{ ocp_project }}"

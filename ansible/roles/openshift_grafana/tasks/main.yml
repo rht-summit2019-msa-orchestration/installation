@@ -1,0 +1,116 @@
+---
+
+# service account
+- name: create service account {{ grafana_service_account }} service account
+  oc_serviceaccount:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    name: "{{ grafana_service_account }}"
+    namespace: "{{ ocp_project }}"
+
+- name: add cluster view rights to grafana service account
+  oc_adm_policy_user:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    user: "system:serviceaccount:{{ ocp_project }}:{{ grafana_service_account }}"
+    resource_name: view
+    rolebinding_name: grafana-view
+    resource_kind: role
+
+# create grafana configmap
+- name: create {{ grafana_configmap }} configmap
+  oc_configmap:
+    state: present
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ grafana_configmap }}"
+    from_file:
+      defaults.ini: "{{ resources_dir}}/defaults.ini"
+
+# deploy grafana
+- name: check if grafana is deployed
+  oc_obj:
+    state: list
+    oc_binary: "{{ openshift_cli }}"
+    namespace: "{{ ocp_project }}"
+    name: "{{ grafana_deployment }}"
+    kind: deployment
+  register: deployed 
+
+- name: deploy grafana
+  shell: >
+    {{ openshift_cli }} process -f {{ grafana_template }} \
+    -p IMAGE_GRAFANA={{ grafana_image }} \
+    | {{ openshift_cli }} create -f - -n {{ ocp_project }}
+  when: deployed.results.stderr is defined and deployed.results.stderr != ""
+
+- name: wait until grafana is running
+  shell: "{{ openshift_cli }} get deployment {{ grafana_deployment }} -o template --template={{ json_template }} -n {{ ocp_project }}"
+  vars:
+    json_template: '\{\{.status.readyReplicas\}\}'
+  register: result
+  until: result.stdout == "1"
+  retries: 20
+  delay: 10
+  changed_when: false
+
+# grafana datasource
+- name: get grafana route url
+  shell: echo $({{ openshift_cli }} get route {{ grafana_route }} -o jsonpath='{.spec.host}' -n {{ ocp_project }})
+  register: grafana_host
+
+- name: get {{ grafana_service_account }} service account token
+  shell: "{{ openshift_cli }} sa get-token {{ grafana_service_account }} -n {{ ocp_project }}"
+  register: grafana_sa_token
+
+- name: get prometheus route host
+  shell: echo $({{ openshift_cli }} get route {{ prometheus_route }} -o jsonpath='{.spec.host}' -n {{ ocp_project }})
+  register: prometheus_host
+
+- name: set prometheus url fact to route url
+  set_fact: 
+    prometheus_url: "http://{{ prometheus_host.stdout }}"
+
+- name: copy datasource json from template
+  template: src={{resources_dir }}/{{ item }} dest={{ work_dir }}/{{ item }}
+  with_items:
+    - grafana-datasource.json
+
+- name: add new datasource to grafana
+  uri:
+    url: http://{{ grafana_host.stdout }}/api/datasources
+    method: POST
+    headers:
+      Content-Type: "Content-Type: application/json"
+    body: "{{ lookup('file', grafana_datasource_json) }}"
+    body_format: json
+    status_code:
+    - 200
+    - 409
+  vars:
+    grafana_datasource_json: "{{ work_dir }}/grafana-datasource.json"
+  register: add_ds
+
+- block:
+  - name: Retrieve current grafana datasource
+    uri:
+      url: "http://{{ grafana_host.stdout }}/api/datasources/name/{{ grafana_prometheus_datasource }}"
+      method: GET
+      status_code:
+      - 200
+    register: grafana_ds
+  - name: Update grafana datasource
+    uri:
+      url: "http://{{ grafana_host.stdout }}/api/datasources/{{ grafana_ds.json['id'] }}"
+      method: PUT
+      body: "{{ lookup('file', grafana_datasource_json) }}"
+      body_format: json
+      headers:
+        Content-Type: "Content-Type: application/json"
+      status_code:
+      - 200
+    vars:
+      grafana_datasource_json: "{{ work_dir }}/grafana-datasource.json"      
+    register: update_ds
+  when: add_ds.status == 409
