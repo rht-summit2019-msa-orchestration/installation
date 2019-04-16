@@ -1,6 +1,6 @@
 ---
 
-cluster_provisioner: developer
+cluster_provisioner: user1
 
 operator_project: kafka-operator
 
