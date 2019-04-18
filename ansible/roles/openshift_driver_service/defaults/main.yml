@@ -14,8 +14,8 @@ kafka_topic_driver_command: topic-driver-command
 kafka_topic_driver_event: topic-driver-event
 kafka_topic_ride_event: topic-ride-event
 
-driver_assigned_min_delay: 1
-driver_assigned_max_delay: 3
+driver_assigned_min_delay: 3
+driver_assigned_max_delay: 6
 ride_started_min_delay: 5
 ride_started_max_delay: 10
 ride_ended_min_delay: 5
