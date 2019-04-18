@@ -76,29 +76,6 @@
     (create_gogs_users is defined and create_gogs_users|bool == true) and
     (result.status != 200)
 
-- name: check if gogs organisation exists
-  uri:
-    url: http://{{ gogs_url.stdout }}/api/v1/orgs/{{ gogs_organization }}
-    status_code: 200,404
-  register: result
-  ignore_errors: true
-  changed_when: false
-
-- name: create {{ gogs_organization }} gogs organization
-  uri:
-    url: http://{{ gogs_url.stdout }}/api/v1/admin/users/{{ gogs_admin_user }}/orgs
-    method: POST
-    force_basic_auth: yes
-    user: "{{ gogs_admin_user }}"
-    password: "{{ gogs_admin_password }}"
-    body: >
-      {"username":"{{ gogs_organization }}"}
-    body_format: json
-    status_code: 201
-  when: >
-    (create_gogs_users is defined and create_gogs_users|bool == true) and
-    (result.status != 200)
-
 - name: check if gogs {{ gogs_developer_user }} user exists
   uri:
     url: http://{{ gogs_url.stdout }}/api/v1/users/{{ gogs_developer_user }}
@@ -121,46 +98,3 @@
   when: >
     (create_gogs_users is defined and create_gogs_users|bool == true) and
     (result.status != 200)
-
-- name: get {{ gogs_organization }} teams
-  uri:
-    url: http://{{ gogs_url.stdout }}/api/v1/orgs/{{ gogs_organization }}/teams
-    method: GET
-  register: gogs_organization_team
-  when: >
-    (create_gogs_users is defined and create_gogs_users|bool == true)
-  ignore_errors: true
-  changed_when: false
-
-- name: filter out owners team
-  set_fact:
-    gogs_organization_team_owners_id: "{{ gogs_organization_team.json|json_query(gogs_organization_team_owners_query) }}"
-  when: >
-    (create_gogs_users is defined and create_gogs_users|bool == true)
-  vars:
-    gogs_organization_team_owners_query: "[?name=='Owners'] | [0].id"
-  ignore_errors: true
-  changed_when: false
-
-- name: remove {{ gogs_developer_user }} user from the owners team of the {{ gogs_organization }} organization
-  uri:
-    url: http://{{ gogs_url.stdout }}/api/v1/admin/teams/{{ gogs_organization_team_owners_id }}/members/{{ gogs_developer_user }}
-    method: DELETE
-    force_basic_auth: yes
-    user: "{{ gogs_admin_user }}"
-    password: "{{ gogs_admin_password }}"
-    status_code: 204
-  when: >
-    (create_gogs_users is defined and create_gogs_users|bool == true)
-  ignore_errors: true
-
-- name: add {{ gogs_developer_user }} user to the owners team of the {{ gogs_organization }} organization
-  uri:
-    url: http://{{ gogs_url.stdout }}/api/v1/admin/teams/{{ gogs_organization_team_owners_id }}/members/{{ gogs_developer_user }}
-    method: PUT
-    force_basic_auth: yes
-    user: "{{ gogs_admin_user }}"
-    password: "{{ gogs_admin_password }}"
-    status_code: 204
-  when: >
-    (create_gogs_users is defined and create_gogs_users|bool == true)
