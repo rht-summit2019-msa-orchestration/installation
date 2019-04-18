@@ -31,6 +31,6 @@ ocp_pipeline_build_config: "{{ ocp_application_name }}-pipeline"
 ocp_build_imagestream: redhat-openjdk18-openshift:1.4
 
 git_url: "gogs:3000"
-git_repository: "acme/driver-service"
+git_repository: "developer/driver-service"
 
 logging_style: dev

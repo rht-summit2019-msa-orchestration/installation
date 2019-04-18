@@ -30,7 +30,7 @@ ocp_binary_build_config: "{{ ocp_application_name }}-binary"
 ocp_pipeline_build_config: "{{ ocp_application_name }}-pipeline"
 ocp_build_imagestream: redhat-openjdk18-openshift:1.4
 
-git_repository: "acme/passenger-service"
+git_repository: "developer/passenger-service"
 git_url: "gogs:3000"
 
 logging_style: dev
