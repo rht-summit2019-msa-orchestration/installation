@@ -24,7 +24,7 @@
     {{ openshift_cli }} process -f {{ ocp_application_template }} \ 
     -p APPLICATION_NAME={{ ocp_application_name }} \
     -p APPLICATION_CONFIGMAP={{ application_configmap }} \
-    | oc create -f - -n {{ ocp_project }}
+    | {{ openshift_cli }} create -f - -n {{ ocp_project }}
   when: >
     result.results.stderr is defined and result.results.stderr != ""
 
@@ -42,7 +42,7 @@
     {{ openshift_cli }} process -f {{ ocp_binary_build_config_template }} \
     -p APPLICATION_NAME={{ ocp_application_name }} \
     -p IMAGE_STREAM={{ ocp_build_imagestream }} \
-    | oc create -f - -n {{ project_tools }}
+    | {{ openshift_cli }} create -f - -n {{ project_tools }}
   when: result.results.stderr is defined and result.results.stderr != ""
 
 - name: check if the {{ ocp_pipeline_build_config }} pipeline exists in the {{ project_tools }} project
@@ -66,5 +66,5 @@
     -p JENKINS_PROJECT={{ project_tools }} \
     -p APP_IMAGESTREAM={{ ocp_application_name }} \    
     -p APP_DC={{ ocp_application_name }} \
-    | oc create -f - -n {{ project_tools }}
+    | {{ openshift_cli }} create -f - -n {{ project_tools }}
   when: result.results.stderr is defined and result.results.stderr != ""
