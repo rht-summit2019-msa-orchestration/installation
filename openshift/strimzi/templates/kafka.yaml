@@ -231,20 +231,6 @@ spec:
       livenessProbe:
         initialDelaySeconds: {{ topic_operator_liveness_probe_initial_delay_seconds }}
         timeoutSeconds: {{ topic_operator_liveness_probe_timeout_seconds }}
-    userOperator: 
-      resources:
-        requests:
-          cpu: "{{ user_operator_requests_cpu }}"
-          memory: {{ user_operator_requests_memory }}
-        limits:
-          cpu: "{{ user_operator_limits_cpu }}"
-          memory: {{ user_operator_limits_memory }}
-      readinessProbe:
-        initialDelaySeconds: {{ user_operator_readiness_probe_initial_delay_seconds }}
-        timeoutSeconds: {{ user_operator_readiness_probe_timeout_seconds }}
-      livenessProbe:
-        initialDelaySeconds: {{ user_operator_liveness_probe_initial_delay_seconds }}
-        timeoutSeconds: {{ user_operator_liveness_probe_timeout_seconds }}
     tlsSidecar:
       resources:
         requests:
